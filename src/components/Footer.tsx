@@ -4,7 +4,6 @@ function Footer() {
   return (
     <>
       <div>Footer</div>
-      <Link to="/">Return Back</Link>
     </>
   );
 }
