@@ -8,8 +8,15 @@ function Navbar() {
       <div id="playwrite-it-moderna-uniquifier" className="[font-size:30px]">
         GoFood
       </div>
-      <div className="font-bold">Home</div>
-      <div className="opacity-75">Login</div>
+      <Link to={"/home"}>
+        <div className="font-bold">Home</div>
+      </Link>
+      <Link to={"/login"}>
+        <div className="font-bold">Login</div>
+      </Link>
+      <Link to={"/signup"}>
+        <div className="font-bold">Signup</div>
+      </Link>
     </div>
   );
 }
