@@ -1,13 +1,14 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
 
 const ConnectDB = async () => {
-  const uri =
-    "mongodb+srv://GoFood:GoFoodMern%4024617@gofood.nctc8o5.mongodb.net/?retryWrites=true&w=majority&appName=GoFood";
+  const URI = process.env.DB_URI; //Your DB_URI in env file
   try {
-    await mongoose.connect(uri);
+    await mongoose.connect(URI);
     console.log("Connection ok");
-  } catch {
-    console.log("No Connection");
+  } catch (Exception) {
+    console.log(Exception);
   }
 };
 
