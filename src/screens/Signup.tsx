@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 const Signup = () => {
-  const [darkMode, setDarkMode] = useState(true);
+  const darkMode = true;
   const [name, SetName] = useState("");
   const [password, SetPassword] = useState("");
   const [email, SetEmail] = useState("");

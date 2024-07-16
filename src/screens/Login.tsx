@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function Login() {
   const [password, SetPassword] = useState("");
   const [email, SetEmail] = useState("");
-  const [darkMode, setDarkMode] = useState(true);
+  const darkMode = true;
   const HandleLogin = async (e: any) => {
     e.preventDefault();
     const response = await fetch("http://localhost:5000/Login_User/", {
