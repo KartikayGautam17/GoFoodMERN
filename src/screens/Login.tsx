@@ -32,11 +32,10 @@ function Login() {
       localStorage.setItem("AuthToken", _response.AuthToken);
       navigate("/");
     } else if (response.status === 400) {
-      console.log(response.status);
+      alert(response.statusText);
     } else {
       alert(String(response.statusText));
     }
-    // console.log({ name, password, email, location });
   };
   return (
     <div className="flex flex-col justify-center items-center w-full h-[100vh] bg-[#282D2D] px-5">

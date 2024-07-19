@@ -79,7 +79,7 @@ function Card({ img, name, description, options }: Props) {
     >
       <img
         id="card-image"
-        className="w-[300px] h-[200px] object-contain"
+        className="w-[300px] h-[200px] object-fit"
         alt="Delicious"
         src={img}
       ></img>

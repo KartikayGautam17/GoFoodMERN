@@ -52,9 +52,9 @@ function Home() {
         <Navbar />
       </div>
       <div>
-        <Carousel Autoslide={true} Search={Search} SetSearch={SetSearch} />
+        <Carousel Search={Search} SetSearch={SetSearch} />
       </div>
-      <div className="p-10 m-3 text-2xl ">
+      <div className="p-10 pt-2 m-3 mt-0 text-2xl ">
         {FoodCategories.length !== 0 ? (
           FoodCategories.map((food_category: _dish_type_obj) => {
             return (
