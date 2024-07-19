@@ -1,6 +1,22 @@
 import { useEffect, useState } from "react";
 
-function Carousel({ Slides, Autoslide }: any) {
+function Carousel({ Autoslide, Search, SetSearch }: any) {
+  const sample1 =
+    "https://i.pinimg.com/originals/e8/79/ec/e879ecc33bbcb3fe9a50bf54285af32e.jpg";
+  const sample2 =
+    "https://wallpapersmug.com/download/1280x720/df0d34/mountains-iceland-nature.jpg";
+  const sample3 =
+    "https://wallpapersmug.com/download/1280x720/0d0416/mountains-adorable-lake-nature.jpg";
+  const sample4 =
+    "https://images.wallpaperscraft.com/image/single/mountains_clouds_dusk_154131_1280x720.jpg";
+  const sample5 =
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHQ1tXG7w2RY7IeHvuBnUsorkOz29XcGHKvw&s";
+  const Slides: any = [sample1, sample2, sample3, sample4].map(
+    (val: any, i: any) => {
+      return <img key={i} src={val} className="w-full h-full object-cover" />;
+    }
+  );
+
   const [Current, SetCurrent] = useState(0);
   const HandleLeft = () => {
     SetCurrent(Current === 0 ? Slides.length - 1 : Current - 1);
@@ -12,7 +28,6 @@ function Carousel({ Slides, Autoslide }: any) {
     if (!Autoslide) return;
     const Interval = setInterval(() => {
       HandleRight();
-      console.log("R->()");
     }, 3000);
 
     return () => {
@@ -60,6 +75,10 @@ function Carousel({ Slides, Autoslide }: any) {
                 type="text"
                 placeholder="Search"
                 className="input input-bordered w-24 md:w-auto rounded-[40px] mr-1"
+                value={Search}
+                onChange={(e) => {
+                  SetSearch(e.target.value);
+                }}
               />
             </div>
           </div>

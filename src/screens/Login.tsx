@@ -1,12 +1,23 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
+  interface Info {
+    name: string;
+  }
+
+  interface SuccessResponse {
+    result: string;
+    info: Info;
+    AuthToken: string;
+  }
+
+  const navigate = useNavigate();
   const [password, SetPassword] = useState("");
   const [email, SetEmail] = useState("");
   const darkMode = true;
   const HandleLogin = async (e: any) => {
-    e.preventDefault();
+    //e.preventDefault();
     const response = await fetch("http://localhost:5000/Login_User/", {
       method: "POST",
       headers: {
@@ -14,11 +25,14 @@ function Login() {
       },
       body: JSON.stringify({ password, email }),
     });
+
     if (response.ok) {
-      const _response = await response.json();
-      alert("Logged in Successfully " + _response.info.name);
+      const _response: SuccessResponse = await response.json();
+      alert("Logged in Successfully " + _response?.info.name);
+      localStorage.setItem("AuthToken", _response.AuthToken);
+      navigate("/");
     } else if (response.status === 400) {
-      alert(response.statusText);
+      console.log(response.status);
     } else {
       alert(String(response.statusText));
     }

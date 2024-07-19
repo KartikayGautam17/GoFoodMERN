@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const Signup = () => {
   const darkMode = true;
+  const navigate = useNavigate();
   const [name, SetName] = useState("");
   const [password, SetPassword] = useState("");
   const [email, SetEmail] = useState("");
@@ -17,6 +18,7 @@ const Signup = () => {
     });
     if (response.ok) {
       alert("Signed Up Successfully");
+      navigate("/");
     } else if (response.status === 400) {
       alert("Invalid Credentials");
     } else {

@@ -3,34 +3,98 @@ import Navbar from "../components/Navbar";
 
 import Card from "../components/Card";
 import Carousel from "../components/Carousel";
+import { useEffect, useState } from "react";
+
+interface FoodResponse {
+  Dishes: _dishes_obj[];
+  Dish_Types: _dish_type_obj[];
+}
+
+interface _dish_type_obj {
+  CategoryName: string;
+  _id: string;
+}
+
+interface _dishes_obj {
+  CategoryName: string;
+  _id: string;
+  name: string;
+  img: string;
+  description: string;
+  options: Array<{
+    regular: string;
+    medium: string;
+    large: string;
+  }>;
+}
 
 function Home() {
-  const sample1 =
-    "https://i.pinimg.com/originals/e8/79/ec/e879ecc33bbcb3fe9a50bf54285af32e.jpg";
-  const sample2 =
-    "https://wallpapersmug.com/download/1280x720/df0d34/mountains-iceland-nature.jpg";
-  const sample3 =
-    "https://wallpapersmug.com/download/1280x720/0d0416/mountains-adorable-lake-nature.jpg";
-  const sample4 =
-    "https://images.wallpaperscraft.com/image/single/mountains_clouds_dusk_154131_1280x720.jpg";
-  const sample5 =
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHQ1tXG7w2RY7IeHvuBnUsorkOz29XcGHKvw&s";
-  const Slides: any = [sample1, sample2, sample3, sample4].map(
-    (val: any, i: any) => {
-      return <img key={i} src={val} className="w-full h-full object-cover" />;
-    }
-  );
-
+  const [FoodCategories, setFoodCategories] = useState<_dish_type_obj[]>([]);
+  const [FoodItems, setFoodItems] = useState<_dishes_obj[]>([]);
+  const [Search, SetSearch] = useState<string>("");
+  const LoadData = async () => {
+    const response: any = await fetch("http://localhost:5000/Dishes/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const FoodData: FoodResponse = await response.json();
+    setFoodCategories(FoodData.Dish_Types);
+    setFoodItems(FoodData.Dishes);
+  };
+  useEffect(() => {
+    LoadData();
+  }, []);
   return (
     <>
       <div>
         <Navbar />
       </div>
       <div>
-        <Carousel Slides={Slides} Autoslide={true} />
+        <Carousel Autoslide={true} Search={Search} SetSearch={SetSearch} />
       </div>
-      <div className="p-10 grid grid-rows-2 grid-cols-4">
-        {Array(6).fill(<Card />)}
+      <div className="p-10 m-3 text-2xl ">
+        {FoodCategories.length !== 0 ? (
+          FoodCategories.map((food_category: _dish_type_obj) => {
+            return (
+              <>
+                <div className="ml-8 my-5" key={food_category._id}>
+                  {food_category.CategoryName}
+                </div>
+                <div className="grid lg:grid-cols-4 gap-5 sm:grid-cols-1 md:grid-cols-2">
+                  {FoodItems.length !== 0 ? (
+                    FoodItems.filter(
+                      (food_item: _dishes_obj) =>
+                        food_item.CategoryName === food_category.CategoryName &&
+                        (Search.length === 0
+                          ? true
+                          : food_item.name
+                              .toLowerCase()
+                              .includes(Search.toLowerCase()))
+                    ).map((FilteredItems) => {
+                      return (
+                        <div key={FilteredItems._id}>
+                          <Card
+                            name={FilteredItems.name}
+                            description={FilteredItems.description}
+                            options={FilteredItems.options[0]}
+                            img={FilteredItems.img}
+                            key={FilteredItems._id}
+                          ></Card>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div>No Food Items Found</div>
+                  )}
+                </div>
+              </>
+            );
+          })
+        ) : (
+          <div>No Categories Found</div>
+        )}
       </div>
       <Footer />
     </>

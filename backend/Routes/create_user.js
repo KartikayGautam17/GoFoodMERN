@@ -1,6 +1,7 @@
 import express from "express";
 import User from "../user_model.js";
 import { check, validationResult } from "express-validator";
+import bcrypt from "bcryptjs";
 const Router = express.Router();
 
 Router.post(
@@ -11,6 +12,11 @@ Router.post(
     check("password", "Incorrect Password Format").isLength({ min: 5 }),
   ],
   async (request, response) => {
+    const pass_salt = await bcrypt.genSalt(10);
+    const secured_password = await bcrypt.hash(
+      request.body.password,
+      pass_salt
+    );
     try {
       const res = validationResult(request);
       if (!res.isEmpty()) {
@@ -23,7 +29,7 @@ Router.post(
       }
       await User.create({
         name: request.body.name,
-        password: request.body.password,
+        password: secured_password,
         email: request.body.email,
         location: request.body.location,
       });
