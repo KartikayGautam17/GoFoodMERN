@@ -6,24 +6,27 @@ import Footer from "./components/Footer";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Signup from "./screens/Signup";
 import Login from "./screens/Login";
+import { CartContext } from "./components/ContextReducer";
 function App() {
   return (
     <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route
-            path="/Footer"
-            element={
-              <div>
-                <Footer />
-              </div>
-            }
-          />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </Router>
+      <CartContext>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/Footer"
+              element={
+                <div>
+                  <Footer />
+                </div>
+              }
+            />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </Router>
+      </CartContext>
     </>
   );
 }

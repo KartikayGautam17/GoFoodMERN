@@ -1,6 +1,6 @@
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-
+import { CartContext } from "../components/ContextReducer";
 import Card from "../components/Card";
 import Carousel from "../components/Carousel";
 import { useEffect, useState } from "react";
@@ -54,7 +54,7 @@ function Home() {
       <div>
         <Carousel Search={Search} SetSearch={SetSearch} />
       </div>
-      <div className="p-10 pt-2 m-3 mt-0 text-2xl ">
+      <div className="p-10 pt-2 m-3 mt-0 text-2xl w-[95%] ml-5 flex justify-start gap-10 flex-col">
         {FoodCategories.length !== 0 ? (
           FoodCategories.map((food_category: _dish_type_obj) => {
             return (
@@ -62,7 +62,7 @@ function Home() {
                 <div className="ml-8 my-5" key={food_category._id}>
                   {food_category.CategoryName}
                 </div>
-                <div className="grid lg:grid-cols-4 gap-5 sm:grid-cols-1 md:grid-cols-2">
+                <div className="grid lg:grid-cols-4 gap-5  md:grid-cols-2 sm:grid-cols-1">
                   {FoodItems.length !== 0 ? (
                     FoodItems.filter(
                       (food_item: _dishes_obj) =>

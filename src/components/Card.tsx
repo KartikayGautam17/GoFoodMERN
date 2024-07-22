@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-
+import { useEffect, useState, useRef } from "react";
+import { useCartDispatch, useCart } from "./ContextReducer";
 interface Props {
   img: string;
   name: string;
@@ -8,19 +8,13 @@ interface Props {
     regular: string;
     medium: string;
     large: string;
-  };
-}
-
-interface _options {
-  options: {
-    regular: string;
-    medium: string;
-    large: string;
     [key: string]: string;
   };
 }
 
-function CardFooter({ options }: _options) {
+function CardFooter({ Details }: { Details: Props }) {
+  const [bg_color, Set_bg_color] = useState<string>("bg-yellow-500/90");
+  const { name, img, description, options } = Details;
   const keys = Object.keys(options);
   const PizzaSize: string[] = [];
   keys.map((val) => {
@@ -31,42 +25,70 @@ function CardFooter({ options }: _options) {
   const [Size, SetSize] = useState<string>(PizzaSize[0]); // Amount of Pizzas to be ordered
   const _default_price = Amount * +options[`${Size}`];
   const [Tprice, SetTprice] = useState<number>(_default_price); // Tprice = Total Price for abberiviation
+
+  const CartDispatch = useCartDispatch();
+  const CartState = useCart();
+  const HandleAddToCart = async () => {
+    await CartDispatch({
+      type: "ADD",
+      OrderQuantity: { Amount, Size, Tprice },
+      OrderItem: { name, img, description },
+    });
+  };
+
   useEffect(() => {
     SetTprice(Amount * +options[`${Size}`]);
   }, [Size, Amount]);
   return (
-    <div
-      id="card-footer"
-      className="text-[16px] w-[250px] h-[30px] flex justify-between items-center my-5 mx-auto"
-    >
-      <select
-        onChange={(e) => {
-          SetAmount(+e.target.value);
-        }}
-        id="pizza-amount-dropdown"
-        className="w-[35px] h-full  border-2 border-solid border-gray-300 bg-black rounded-md"
-      >
-        {Array.from(PizzaAmount, (val, i) => {
-          return <option key={i}>{val}</option>;
-        })}
-      </select>
-      <select
-        onChange={(e) => {
-          SetSize(e.target.value);
-        }}
-        id="pizza-size-dropdown"
-        className="w-[85px] h-full border-2 border-solid border-gray-300 bg-black rounded-md"
-      >
-        {Array.from(PizzaSize, (val, i) => {
-          return <option key={i}>{val}</option>;
-        })}
-      </select>
+    <div>
       <div
-        id="price"
-        className="w-[75px] h-[20px] flex items-center justify-between"
+        id="card-footer"
+        className="text-[16px] w-[250px] h-[30px] flex justify-between items-center my-5 mx-auto"
       >
-        {"₹" + Tprice}
+        <select
+          onChange={(e) => {
+            SetAmount(+e.target.value);
+          }}
+          id="pizza-amount-dropdown"
+          className="w-[35px] h-full  border-2 border-solid border-gray-300 bg-black rounded-md"
+        >
+          {Array.from(PizzaAmount, (val, i) => {
+            return <option key={i}>{val}</option>;
+          })}
+        </select>
+        <select
+          onChange={(e) => {
+            SetSize(e.target.value);
+          }}
+          id="pizza-size-dropdown"
+          className="w-[85px] h-full border-2 border-solid border-gray-300 bg-black rounded-md"
+        >
+          {Array.from(PizzaSize, (val, i) => {
+            return <option key={i}>{val}</option>;
+          })}
+        </select>
+        <div
+          id="price"
+          className="w-[75px] h-[20px] flex items-center justify-between"
+        >
+          {"₹" + Tprice}
+        </div>
       </div>
+      <button
+        onClick={async () => {
+          await HandleAddToCart();
+          Set_bg_color("bg-yellow-500/20");
+          setTimeout(() => {
+            Set_bg_color("bg-yellow-500/90");
+          }, 200);
+        }}
+        className={`w-full font-medium rounded-full ${bg_color}`}
+      >
+        <div className="flex justify-center items-center">
+          <p>Add to Cart</p>
+          <img src="./cart-plus.svg" className="m-2"></img>
+        </div>
+      </button>
     </div>
   );
 }
@@ -75,7 +97,7 @@ function Card({ img, name, description, options }: Props) {
   return (
     <div
       id="card-container"
-      className="text-[16px] w-[300px] h-[450px] border-2 border-solid border-gray-300 rounded-[15px] overflow-hidden m-5"
+      className="text-[16px] w-[300px] h-[500px] border-2 border-solid border-gray-300 rounded-[15px] overflow-hidden m-5"
     >
       <img
         id="card-image"
@@ -90,7 +112,7 @@ function Card({ img, name, description, options }: Props) {
         <p id="card-text" className="font-extralight my-2">
           {description}
         </p>
-        <CardFooter options={options} />
+        <CardFooter Details={{ name, img, description, options }} />
       </div>
     </div>
   );

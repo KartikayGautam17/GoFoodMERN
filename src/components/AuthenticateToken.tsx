@@ -8,6 +8,7 @@ const TokenAuthentication = async () => {
     },
   });
   const result = await response.json();
+
   return result.code === 200 ? true : false;
 };
 
