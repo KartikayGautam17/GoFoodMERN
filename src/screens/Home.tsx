@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import { CartContext } from "../components/ContextReducer";
 import Card from "../components/Card";
 import Carousel from "../components/Carousel";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface FoodResponse {
   Dishes: _dishes_obj[];
@@ -29,6 +29,7 @@ interface _dishes_obj {
 }
 
 function Home() {
+  const _UID = useRef(-1);
   const [FoodCategories, setFoodCategories] = useState<_dish_type_obj[]>([]);
   const [FoodItems, setFoodItems] = useState<_dishes_obj[]>([]);
   const [Search, SetSearch] = useState<string>("");
@@ -62,7 +63,7 @@ function Home() {
                 <div className="ml-8 my-5" key={food_category._id}>
                   {food_category.CategoryName}
                 </div>
-                <div className="grid lg:grid-cols-4 gap-5  md:grid-cols-2 sm:grid-cols-1">
+                <div className="grid lg:grid-cols-4 gap-5 md:grid-cols-2 sm:grid-cols-1">
                   {FoodItems.length !== 0 ? (
                     FoodItems.filter(
                       (food_item: _dishes_obj) =>
@@ -73,6 +74,7 @@ function Home() {
                               .toLowerCase()
                               .includes(Search.toLowerCase()))
                     ).map((FilteredItems) => {
+                      _UID.current += 1;
                       return (
                         <div key={FilteredItems._id}>
                           <Card
@@ -81,6 +83,7 @@ function Home() {
                             options={FilteredItems.options[0]}
                             img={FilteredItems.img}
                             key={FilteredItems._id}
+                            id={FilteredItems._id}
                           ></Card>
                         </div>
                       );

@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import { useCartDispatch, useCart } from "./ContextReducer";
+import { useCartDispatch, useCart, useUID } from "./ContextReducer";
 interface Props {
+  id: string;
   img: string;
   name: string;
   description: string;
@@ -14,7 +15,8 @@ interface Props {
 
 function CardFooter({ Details }: { Details: Props }) {
   const [bg_color, Set_bg_color] = useState<string>("bg-yellow-500/90");
-  const { name, img, description, options } = Details;
+  const { name, img, description, options, id } = Details;
+
   const keys = Object.keys(options);
   const PizzaSize: string[] = [];
   keys.map((val) => {
@@ -23,15 +25,30 @@ function CardFooter({ Details }: { Details: Props }) {
   const PizzaAmount: number[] = [1, 2, 3, 4, 5, 6];
   const [Amount, SetAmount] = useState<number>(1);
   const [Size, SetSize] = useState<string>(PizzaSize[0]); // Amount of Pizzas to be ordered
-  const _default_price = Amount * +options[`${Size}`];
-  const [Tprice, SetTprice] = useState<number>(_default_price); // Tprice = Total Price for abberiviation
-
+  const _price = Amount * +options[`${Size}`];
+  const PriceEach = +options[`${Size}`];
+  const [Tprice, SetTprice] = useState<number>(_price); // Tprice = Total Price for abberiviation
+  let uid = useUID();
   const CartDispatch = useCartDispatch();
   const CartState = useCart();
   const HandleAddToCart = async () => {
+    for (const iterator of CartState) {
+      if (iterator.id === id && iterator.OrderQuantity.Size === Size) {
+        await CartDispatch({
+          type: "UPDATE",
+          id: id,
+          OrderQuantity: { Amount, Size, Tprice, PriceEach },
+        });
+        return;
+      }
+    }
+
+    uid.current += 1;
     await CartDispatch({
+      id: id,
+      uid: uid.current,
       type: "ADD",
-      OrderQuantity: { Amount, Size, Tprice },
+      OrderQuantity: { Amount, Size, Tprice, PriceEach },
       OrderItem: { name, img, description },
     });
   };
@@ -93,7 +110,7 @@ function CardFooter({ Details }: { Details: Props }) {
   );
 }
 
-function Card({ img, name, description, options }: Props) {
+function Card({ img, name, description, options, id }: Props) {
   return (
     <div
       id="card-container"
@@ -112,7 +129,7 @@ function Card({ img, name, description, options }: Props) {
         <p id="card-text" className="font-extralight my-2">
           {description}
         </p>
-        <CardFooter Details={{ name, img, description, options }} />
+        <CardFooter Details={{ name, img, description, options, id }} />
       </div>
     </div>
   );

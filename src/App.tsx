@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Signup from "./screens/Signup";
 import Login from "./screens/Login";
 import { CartContext } from "./components/ContextReducer";
+import UserCart from "./screens/Cart";
 function App() {
   return (
     <>
@@ -24,6 +25,7 @@ function App() {
             />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/MyCart" element={<UserCart />} />
           </Routes>
         </Router>
       </CartContext>

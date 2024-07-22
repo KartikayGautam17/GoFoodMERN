@@ -57,7 +57,7 @@ function Navbar() {
             </Link>
           </div>
           <div className="inline-flex justify-end w-full items-center gap-5">
-            <Link to={"/login"}>
+            <Link to={"/MyCart"}>
               <div className="font-bold p-3 bg-white text-green-500 rounded-sm">
                 My Cart
               </div>
