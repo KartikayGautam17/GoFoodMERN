@@ -1,3 +1,4 @@
+import { useReducer, useRef } from "react";
 import { useCart, useCartDispatch } from "../components/ContextReducer";
 import { Link } from "react-router-dom";
 
@@ -19,19 +20,36 @@ interface cart_item_details {
 
 type remove_callback = (action: { type: string; uid: string }) => void;
 
+const PriceStateReducer = (state: any, action: any) => {
+  switch (action.type) {
+    default:
+      return "Some error";
+    case "init":
+      return action.value;
+    case "add":
+      return (state += action.value);
+    case "remove":
+      return (state -= action.value);
+  }
+};
+
 function UserCart() {
+  const CartPrice = useReducer(PriceStateReducer, { type: "init", value: 0 });
+
+  const CalculateTotalPrice = () => {
+    const CheckoutPrice = { current: 0 };
+    CartDetails.map((val) => {
+      CheckoutPrice.current += val.OrderQuantity.Tprice;
+    });
+    return CheckoutPrice.current;
+  };
+
   const CartDetails: cart_item_details[] = useCart();
   const CartDispatch: remove_callback = useCartDispatch();
-
   if (CartDetails.length === 0)
     return (
       <>
-        <div>Cart is empty</div>
-        <Link to={"/"}>
-          <button className="bg-green-500 w-32 h-10 rounded-[20px]">
-            Return back
-          </button>
-        </Link>
+        <div className="m-10 text-2xl p-5">Cart is empty</div>
       </>
     );
   const TotalAmount = CartDetails.reduce(
@@ -39,7 +57,7 @@ function UserCart() {
   );
   return (
     <>
-      <div>
+      <div className="p-5 h-[375px] overflow-y-scroll">
         <table className="table table-auto">
           <thead>
             <tr>
@@ -77,7 +95,14 @@ function UserCart() {
           </tbody>
         </table>
       </div>
-      <button className="bg-green-500">Checkout</button>
+      <div>
+        <button className="bg-green-500 w-28 h-12 text-xl rounded-sm mt-2 ml-5 inline-block">
+          Checkout
+        </button>
+        <div className="inline-block mx-5 text-2xl">
+          ₹{CalculateTotalPrice()}
+        </div>
+      </div>
     </>
   );
 }

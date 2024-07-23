@@ -2,15 +2,16 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import TokenAuthentication from "./AuthenticateToken";
 import { useEffect, useState } from "react";
-function Navbar() {
+import CartModal from "./CartModal";
+import UserCart from "../screens/Cart";
+function Navbar({ Auth, SetAuth }: any) {
   const navigate = useNavigate();
+  const [CartView, SetCartView] = useState(false);
   const HandleLogout = () => {
     localStorage.removeItem("AuthToken");
     SetAuth(false);
     navigate("/");
   };
-
-  const [Auth, SetAuth] = useState<boolean>(false);
 
   useEffect(() => {
     TokenAuthentication().then((resolve) => {
@@ -20,7 +21,7 @@ function Navbar() {
   return (
     <div
       id="navbar-main"
-      className="bg-green-500 w-full h-[100px] flex items-center justify-start gap-[50px] px-[75px]"
+      className="bg-green-500 w-full h-[100px] flex items-center justify-start gap-[50px] px-[75px] fixed top-0 z-20"
     >
       <div id="playwrite-it-moderna-uniquifier" className="[font-size:30px]">
         GoFood
@@ -57,11 +58,26 @@ function Navbar() {
             </Link>
           </div>
           <div className="inline-flex justify-end w-full items-center gap-5">
-            <Link to={"/MyCart"}>
+            <button
+              onClick={() => {
+                SetCartView(true);
+              }}
+            >
               <div className="font-bold p-3 bg-white text-green-500 rounded-sm">
                 My Cart
               </div>
-            </Link>
+            </button>
+            {CartView ? (
+              <CartModal
+                onClose={() => {
+                  SetCartView(false);
+                }}
+              >
+                {<UserCart />}
+              </CartModal>
+            ) : (
+              ""
+            )}
             <Link to={"/"}>
               <div
                 onClick={HandleLogout}

@@ -3,6 +3,7 @@ import { useReducer, createContext, useContext, useRef } from "react";
 const CartStateContext = createContext<any>(null);
 const CartDispatchContext = createContext<any>(null);
 const UidStateContext = createContext<any>(null);
+
 interface ORDER_DETAILS {
   id: string;
   uid: number;

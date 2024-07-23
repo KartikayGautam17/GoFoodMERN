@@ -29,6 +29,7 @@ interface _dishes_obj {
 }
 
 function Home() {
+  const [Auth, SetAuth] = useState<boolean>(false);
   const _UID = useRef(-1);
   const [FoodCategories, setFoodCategories] = useState<_dish_type_obj[]>([]);
   const [FoodItems, setFoodItems] = useState<_dishes_obj[]>([]);
@@ -49,8 +50,8 @@ function Home() {
   }, []);
   return (
     <>
-      <div>
-        <Navbar />
+      <div className="relative mt-1">
+        <Navbar Auth={Auth} SetAuth={SetAuth} />
       </div>
       <div>
         <Carousel Search={Search} SetSearch={SetSearch} />
@@ -84,6 +85,7 @@ function Home() {
                             img={FilteredItems.img}
                             key={FilteredItems._id}
                             id={FilteredItems._id}
+                            logged_in={Auth}
                           ></Card>
                         </div>
                       );

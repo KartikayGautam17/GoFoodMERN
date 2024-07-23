@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useCartDispatch, useCart, useUID } from "./ContextReducer";
 interface Props {
+  logged_in?: boolean;
   id: string;
   img: string;
   name: string;
@@ -15,7 +16,7 @@ interface Props {
 
 function CardFooter({ Details }: { Details: Props }) {
   const [bg_color, Set_bg_color] = useState<string>("bg-yellow-500/90");
-  const { name, img, description, options, id } = Details;
+  const { name, img, description, options, id, logged_in } = Details;
 
   const keys = Object.keys(options);
   const PizzaSize: string[] = [];
@@ -91,26 +92,30 @@ function CardFooter({ Details }: { Details: Props }) {
           {"₹" + Tprice}
         </div>
       </div>
-      <button
-        onClick={async () => {
-          await HandleAddToCart();
-          Set_bg_color("bg-yellow-500/20");
-          setTimeout(() => {
-            Set_bg_color("bg-yellow-500/90");
-          }, 200);
-        }}
-        className={`w-full font-medium rounded-full ${bg_color}`}
-      >
-        <div className="flex justify-center items-center">
-          <p>Add to Cart</p>
-          <img src="./cart-plus.svg" className="m-2"></img>
-        </div>
-      </button>
+      {logged_in ? (
+        <button
+          onClick={async () => {
+            await HandleAddToCart();
+            Set_bg_color("bg-yellow-500/20");
+            setTimeout(() => {
+              Set_bg_color("bg-yellow-500/90");
+            }, 200);
+          }}
+          className={`w-full font-medium rounded-full ${bg_color}`}
+        >
+          <div className="flex justify-center items-center">
+            <p>Add to Cart</p>
+            <img src="./cart-plus.svg" className="m-2"></img>
+          </div>
+        </button>
+      ) : (
+        <div>Log in to add to cart</div>
+      )}
     </div>
   );
 }
 
-function Card({ img, name, description, options, id }: Props) {
+function Card({ img, name, description, options, id, logged_in }: Props) {
   return (
     <div
       id="card-container"
@@ -129,7 +134,9 @@ function Card({ img, name, description, options, id }: Props) {
         <p id="card-text" className="font-extralight my-2">
           {description}
         </p>
-        <CardFooter Details={{ name, img, description, options, id }} />
+        <CardFooter
+          Details={{ name, img, description, options, id, logged_in }}
+        />
       </div>
     </div>
   );
