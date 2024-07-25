@@ -21,7 +21,13 @@ Router.post("/", VerifyToken, (request, response) => {
         code: 400,
       });
     } else {
-      response.json({ message: authorized, code: 200 });
+      const UserDetails = jwt.decode(request.token);
+      response.json({
+        message: authorized,
+        code: 200,
+        user_details: UserDetails,
+        login: true,
+      });
     }
   });
 });

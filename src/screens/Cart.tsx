@@ -1,6 +1,9 @@
-import { useReducer, useRef } from "react";
-import { useCart, useCartDispatch } from "../components/ContextReducer";
-import { Link } from "react-router-dom";
+import { useEffect, useReducer, useRef, useState } from "react";
+import {
+  useCart,
+  useCartDispatch,
+  useUserInfoState,
+} from "../components/ContextReducer";
 
 interface cart_item_details {
   uid: string;
@@ -18,23 +21,41 @@ interface cart_item_details {
   };
 }
 
-type remove_callback = (action: { type: string; uid: string }) => void;
-
-const PriceStateReducer = (state: any, action: any) => {
-  switch (action.type) {
-    default:
-      return "Some error";
-    case "init":
-      return action.value;
-    case "add":
-      return (state += action.value);
-    case "remove":
-      return (state -= action.value);
-  }
+type user_details = {
+  iat: number;
+  id: string;
+  email: string;
+  name: string;
+  location: string;
+};
+type info_obj = {
+  code: number;
+  login: boolean;
+  user_details: user_details;
 };
 
+type remove_callback = (action: { type: string; uid: string }) => void;
+
 function UserCart() {
-  const CartPrice = useReducer(PriceStateReducer, { type: "init", value: 0 });
+  const [CheckoutFlag, SetCheckoutFlag] = useState(false);
+  const UserInfo: info_obj = useUserInfoState();
+
+  const HandleCheckout = async () => {
+    SetCheckoutFlag(true);
+    const response = await fetch("http://localhost:5000/Store_Order/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/JSON",
+      },
+      body: JSON.stringify({
+        OrderData: CartDetails,
+
+        email: UserInfo.user_details.email,
+      }),
+    });
+
+    CartDispatch({ type: "CLEAR", uid: "0" });
+  };
 
   const CalculateTotalPrice = () => {
     const CheckoutPrice = { current: 0 };
@@ -46,10 +67,13 @@ function UserCart() {
 
   const CartDetails: cart_item_details[] = useCart();
   const CartDispatch: remove_callback = useCartDispatch();
+
   if (CartDetails.length === 0)
     return (
       <>
-        <div className="m-10 text-2xl p-5">Cart is empty</div>
+        <div className="m-10 text-2xl p-5">
+          {CheckoutFlag ? "Checkout Successful" : "Cart is Empty"}
+        </div>
       </>
     );
   const TotalAmount = CartDetails.reduce(
@@ -57,7 +81,7 @@ function UserCart() {
   );
   return (
     <>
-      <div className="p-5 h-[375px] overflow-y-scroll">
+      <div className="p-5 h-[375px] overflow-y-scroll relative">
         <table className="table table-auto">
           <thead>
             <tr>
@@ -96,7 +120,10 @@ function UserCart() {
         </table>
       </div>
       <div>
-        <button className="bg-green-500 w-28 h-12 text-xl rounded-sm mt-2 ml-5 inline-block">
+        <button
+          className="bg-green-500 w-28 h-12 text-xl rounded-sm mt-2 ml-5 inline-block"
+          onClick={HandleCheckout}
+        >
           Checkout
         </button>
         <div className="inline-block mx-5 text-2xl">

@@ -22,12 +22,13 @@ Router.post("/", async (request, response) => {
       throw "Invalid Credentials";
     } else {
       const user_data = Presence[0];
-      console.log(200);
+      const { name, location } = user_data;
       response.status(200);
       const data = {
-        user: {
-          id: user_data.id,
-        },
+        id: user_data.id,
+        email: _email,
+        name,
+        location,
       };
       const AuthToken = jwt.sign(data, _jwt_secret_key);
       response.json({ result: true, info: user_data, AuthToken: AuthToken });

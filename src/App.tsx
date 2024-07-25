@@ -8,6 +8,7 @@ import Signup from "./screens/Signup";
 import Login from "./screens/Login";
 import { CartContext } from "./components/ContextReducer";
 import UserCart from "./screens/Cart";
+import MyOrders from "./components/MyOrders";
 function App() {
   return (
     <>
@@ -26,6 +27,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route path="/MyCart" element={<UserCart />} />
+            <Route path="MyOrders" element={<MyOrders />} />
           </Routes>
         </Router>
       </CartContext>

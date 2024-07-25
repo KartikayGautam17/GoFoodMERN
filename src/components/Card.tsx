@@ -1,7 +1,11 @@
 import { useEffect, useState, useRef } from "react";
-import { useCartDispatch, useCart, useUID } from "./ContextReducer";
+import {
+  useCartDispatch,
+  useCart,
+  useUID,
+  useUserInfoState,
+} from "./ContextReducer";
 interface Props {
-  logged_in?: boolean;
   id: string;
   img: string;
   name: string;
@@ -16,13 +20,14 @@ interface Props {
 
 function CardFooter({ Details }: { Details: Props }) {
   const [bg_color, Set_bg_color] = useState<string>("bg-yellow-500/90");
-  const { name, img, description, options, id, logged_in } = Details;
+  const { name, img, description, options, id } = Details;
 
   const keys = Object.keys(options);
   const PizzaSize: string[] = [];
   keys.map((val) => {
     PizzaSize.push(val);
   });
+  const UserInfo = useUserInfoState();
   const PizzaAmount: number[] = [1, 2, 3, 4, 5, 6];
   const [Amount, SetAmount] = useState<number>(1);
   const [Size, SetSize] = useState<string>(PizzaSize[0]); // Amount of Pizzas to be ordered
@@ -92,7 +97,7 @@ function CardFooter({ Details }: { Details: Props }) {
           {"₹" + Tprice}
         </div>
       </div>
-      {logged_in ? (
+      {UserInfo.login ? (
         <button
           onClick={async () => {
             await HandleAddToCart();
@@ -115,7 +120,7 @@ function CardFooter({ Details }: { Details: Props }) {
   );
 }
 
-function Card({ img, name, description, options, id, logged_in }: Props) {
+function Card({ img, name, description, options, id }: Props) {
   return (
     <div
       id="card-container"
@@ -134,9 +139,7 @@ function Card({ img, name, description, options, id, logged_in }: Props) {
         <p id="card-text" className="font-extralight my-2">
           {description}
         </p>
-        <CardFooter
-          Details={{ name, img, description, options, id, logged_in }}
-        />
+        <CardFooter Details={{ name, img, description, options, id }} />
       </div>
     </div>
   );

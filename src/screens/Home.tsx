@@ -51,7 +51,7 @@ function Home() {
   return (
     <>
       <div className="relative mt-1">
-        <Navbar Auth={Auth} SetAuth={SetAuth} />
+        <Navbar />
       </div>
       <div>
         <Carousel Search={Search} SetSearch={SetSearch} />
@@ -64,7 +64,7 @@ function Home() {
                 <div className="ml-8 my-5" key={food_category._id}>
                   {food_category.CategoryName}
                 </div>
-                <div className="grid lg:grid-cols-4 gap-5 md:grid-cols-2 sm:grid-cols-1">
+                <div className="grid l1:grid-cols-4 gap-5 l2:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
                   {FoodItems.length !== 0 ? (
                     FoodItems.filter(
                       (food_item: _dishes_obj) =>
@@ -85,7 +85,6 @@ function Home() {
                             img={FilteredItems.img}
                             key={FilteredItems._id}
                             id={FilteredItems._id}
-                            logged_in={Auth}
                           ></Card>
                         </div>
                       );

@@ -5,6 +5,8 @@ import { Router as router_create_user } from "./Routes/create_user.js";
 import { Router as router_login_user } from "./Routes/login_user.js";
 import { Router as router_dish } from "./Routes/Dishes.js";
 import { Router as router_auth_verify } from "./Routes/auth_verify.js";
+import { Router as router_store_order } from "./Routes/store_order.js";
+import { Router as router_display_orders } from "./Routes/display_order.js";
 import bodyParser from "body-parser";
 
 import dotenv from "dotenv";
@@ -29,6 +31,8 @@ App.use("/auth/", router_auth_verify);
 App.use("/Dishes/", router_dish);
 App.use("/Create_User/", router_create_user);
 App.use("/Login_User/", router_login_user);
+App.use("/Store_Order/", router_store_order);
+App.use("/Display_Orders", router_display_orders);
 App.get("/", (request, response) => {
   response.send("Hi There");
 });

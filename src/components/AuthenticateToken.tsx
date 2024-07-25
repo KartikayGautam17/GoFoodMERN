@@ -9,7 +9,7 @@ const TokenAuthentication = async () => {
   });
   const result = await response.json();
 
-  return result.code === 200 ? true : false;
+  return result.code === 200 ? result : { code: 0 };
 };
 
 export default TokenAuthentication;
