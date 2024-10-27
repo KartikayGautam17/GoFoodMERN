@@ -19,7 +19,9 @@ Router.post(
     );
     try {
       const res = validationResult(request);
+
       if (!res.isEmpty()) {
+        response.status(400);
         response.json(
           res.array().map((val, i, arr) => {
             return val.path + " : " + val.msg;
